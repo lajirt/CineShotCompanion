@@ -346,4 +346,1143 @@
         </div>
         
         <div class="grid grid-cols-3 gap-2 mt-3 text-center text-xs font-mono">
-          <div class="bg-cyber-900/90 p-2 rounded border border-
+          <div class="bg-cyber-900/90 p-2 rounded border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Dual Native ISO</div>
+            <div class="font-bold text-cyan-400 text-sm mt-0.5" id="gear-base-iso">800 / 2500</div>
+          </div>
+          <div class="bg-cyber-900/90 p-2 rounded border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Max Lens Fastness</div>
+            <div class="font-bold text-amber-400 text-sm mt-0.5" id="gear-max-aperture">f/1.8</div>
+          </div>
+          <div class="bg-cyber-900/90 p-2 rounded border border-slate-800">
+            <div class="text-[10px] text-slate-400 uppercase">Rec. Focal Length</div>
+            <div class="font-bold text-emerald-400 text-sm mt-0.5" id="rec-focal-length">50mm</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIMARY RECOMMENDATION CARD (DIAL READOUT) -->
+      <div class="bg-cyber-800 rounded-xl border border-cyan-500/30 p-4 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 glow-cyan"></div>
+            <h2 class="text-sm font-bold tracking-wider font-mono uppercase text-white">Recommended Manual Settings</h2>
+          </div>
+          <span id="badge-mode-indicator" class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700 font-semibold">STILL PHOTOGRAPHY</span>
+        </div>
+
+        <!-- Big 3 Exposure Dials Grid -->
+        <div class="grid grid-cols-3 gap-2 mb-4">
+          <!-- Aperture Tile -->
+          <div class="bg-cyber-900 p-3 rounded-lg border border-slate-700/70 text-center flex flex-col justify-between">
+            <div class="text-[10px] uppercase font-mono text-slate-400 tracking-wider">Aperture</div>
+            <div class="text-2xl font-black font-mono text-cyan-400 my-1 tracking-tight" id="rec-aperture">f/2.8</div>
+            <div class="text-[9px] font-mono text-slate-400 leading-tight" id="rec-aperture-reason">Subject isolation</div>
+          </div>
+
+          <!-- Shutter Speed Tile -->
+          <div class="bg-cyber-900 p-3 rounded-lg border border-slate-700/70 text-center flex flex-col justify-between">
+            <div class="text-[10px] uppercase font-mono text-slate-400 tracking-wider">Shutter Speed</div>
+            <div class="text-2xl font-black font-mono text-amber-400 my-1 tracking-tight" id="rec-shutter">1/500s</div>
+            <div class="text-[9px] font-mono text-slate-400 leading-tight" id="rec-shutter-reason">Motion freeze</div>
+          </div>
+
+          <!-- ISO Tile -->
+          <div class="bg-cyber-900 p-3 rounded-lg border border-slate-700/70 text-center flex flex-col justify-between">
+            <div class="text-[10px] uppercase font-mono text-slate-400 tracking-wider">Base ISO</div>
+            <div class="text-2xl font-black font-mono text-emerald-400 my-1 tracking-tight" id="rec-iso">ISO 800</div>
+            <div class="text-[9px] font-mono text-slate-400 leading-tight" id="rec-iso-reason">Native dual low</div>
+          </div>
+        </div>
+
+        <!-- MODE-SPECIFIC SECTION: Still Photo Aux Settings -->
+        <div id="section-still-aux" class="space-y-2 text-xs font-mono">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-cyber-900/80 p-2 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">FOCUS MODE & DRIVE:</span>
+              <span class="font-bold text-slate-200" id="rec-focus-mode">AF-C • Real-time Eye AF</span>
+              <div class="text-[10px] text-slate-400" id="rec-drive-mode">Drive: Continuous High (Hi+)</div>
+            </div>
+
+            <div class="bg-cyber-900/80 p-2 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">METERING & FILE FORMAT:</span>
+              <span class="font-bold text-slate-200" id="rec-metering">Multi / Matrix Meter</span>
+              <div class="text-[10px] text-cyan-300">Format: RAW (Uncompressed 14-bit)</div>
+            </div>
+          </div>
+
+          <div class="bg-cyber-900/80 p-2.5 rounded border border-slate-800 flex items-center justify-between">
+            <div>
+              <span class="text-slate-400 block text-[10px]">WHITE BALANCE (KELVIN & TINT):</span>
+              <span class="font-bold text-amber-300 text-sm" id="rec-wb-kelvin">5600K (Daylight Balanced)</span>
+            </div>
+            <span class="text-[11px] px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700" id="rec-wb-tint">Tint: +0.5 Magenta</span>
+          </div>
+        </div>
+
+        <!-- MODE-SPECIFIC SECTION: Video Cinema Aux Settings (180deg rule, ND, Log) -->
+        <div id="section-video-aux" class="space-y-2 text-xs font-mono hidden">
+          <!-- Frame Rate & 180 Rule Shutter -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-cyber-900/80 p-2 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">CINEMA FRAME RATE:</span>
+              <div class="flex items-center gap-1 mt-1">
+                <select id="video-fps-select" onchange="recalculateExposure()" class="bg-cyber-800 border border-slate-700 text-cyan-400 rounded px-1.5 py-0.5 text-xs focus:outline-none">
+                  <option value="24">24.00 fps (Cinematic)</option>
+                  <option value="30">30.00 fps (Broadcast/Web)</option>
+                  <option value="60">60.00 fps (Smooth / 2.5x slow)</option>
+                  <option value="120">120.0 fps (Action Slow-Mo)</option>
+                </select>
+              </div>
+              <div class="text-[10px] text-amber-300 mt-1 font-mono" id="rec-video-shutter-rule">180° Rule: 1/48s (or 1/50s)</div>
+            </div>
+
+            <!-- Optical ND Filter Recommendation -->
+            <div class="bg-cyber-900/80 p-2 rounded border border-slate-800">
+              <span class="text-slate-400 block text-[10px]">VARIABLE ND FILTER:</span>
+              <span class="font-bold text-amber-400 text-sm" id="rec-nd-filter">4-Stop ND (ND16)</span>
+              <div class="text-[10px] text-slate-400" id="rec-nd-reason">Crucial to preserve 1/50s in light</div>
+            </div>
+          </div>
+
+          <!-- Picture Profile & Audio -->
+          <div class="bg-cyber-900/80 p-2.5 rounded border border-slate-800 flex items-center justify-between">
+            <div>
+              <span class="text-slate-400 block text-[10px]">PICTURE PROFILE / GAMMA:</span>
+              <span class="font-bold text-cyan-300 text-sm" id="rec-picture-profile">S-Log3 / S-Gamut3.Cine (PP8/9)</span>
+              <div class="text-[10px] text-slate-400" id="rec-log-exposure-target">Target: +1.3 to +1.7 EV Overexposure</div>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[10px]">AUDIO PEAK TARGET:</span>
+              <span class="text-emerald-400 font-bold">-12 dB to -6 dB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Histogram Intent Tip Box -->
+        <div class="mt-3 p-2.5 rounded-lg bg-cyan-950/40 border border-cyan-800/60 flex items-start gap-2 text-xs">
+          <i data-lucide="info" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+          <div>
+            <span class="font-bold text-cyan-300 block font-mono text-[11px]" id="rec-pro-tip-title">Histogram & Exposure Strategy</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed" id="rec-pro-tip-desc">
+              Scene shows moderate contrast. Push exposure slightly to the right (ETTR) to preserve clean shadow details without clipping the specular highlights on the upper boundary.
+            </p>
+          </div>
+        </div>
+
+        <!-- Copy Quick Action -->
+        <button onclick="copyCheatSheet()" class="mt-3 w-full py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-black font-bold font-mono text-xs rounded-lg shadow-lg flex items-center justify-center gap-2 transition">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i> COPY CAMERA SETUP CHEAT SHEET
+        </button>
+      </div>
+
+      <!-- Quick Scene Breakdown Cards -->
+      <div class="bg-cyber-800 rounded-xl border border-slate-800 p-3 grid grid-cols-2 gap-2 text-xs font-mono">
+        <div class="bg-cyber-900/70 p-2 rounded border border-slate-800">
+          <span class="text-slate-500 block text-[10px]">DETECTED SCENE:</span>
+          <span class="text-cyan-300 font-bold" id="telemetry-scene-class">Portrait (Medium Close-Up)</span>
+        </div>
+        <div class="bg-cyber-900/70 p-2 rounded border border-slate-800">
+          <span class="text-slate-500 block text-[10px]">DYNAMIC RANGE:</span>
+          <span class="text-amber-300 font-bold" id="telemetry-dr-class">~8.5 Stops (Moderate)</span>
+        </div>
+        <div class="bg-cyber-900/70 p-2 rounded border border-slate-800">
+          <span class="text-slate-500 block text-[10px]">KEY LIGHT DIRECTION:</span>
+          <span class="text-emerald-300 font-bold" id="telemetry-light-dir">Front-Right (Rembrandt 45°)</span>
+        </div>
+        <div class="bg-cyber-900/70 p-2 rounded border border-slate-800">
+          <span class="text-slate-500 block text-[10px]">COLOR BIAS / TINT:</span>
+          <span class="text-purple-300 font-bold" id="telemetry-color-bias">Warm Golden (~5400K)</span>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Interactive Modal / Notification Toast (No browser alert) -->
+  <div id="toast-modal" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 border border-cyan-400 text-slate-100 px-4 py-3 rounded-lg shadow-2xl flex items-center gap-3">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-cyan-400"></i>
+    <div>
+      <div class="font-bold font-mono text-xs text-cyan-300" id="toast-title">Settings Copied</div>
+      <div class="text-xs text-slate-300" id="toast-message">Camera parameters copied to clipboard for field use.</div>
+    </div>
+  </div>
+
+  <!-- Application Logic & Algorithmic Image Analysis Script -->
+  <script>
+    /* ==========================================================================
+       1. GLOBAL STATE & CAMERA PROFILES
+       ========================================================================== */
+    const state = {
+      mode: 'STILL', // 'STILL' or 'VIDEO'
+      cameraPreset: 'NIKON_Z50_II',
+      videoFps: 24,
+      isWebcamActive: false,
+      gridEnabled: true,
+      zebrasEnabled: false,
+      
+      // Detected / Tuned Parameters
+      ambientLuxLevel: 2, // 0: Night (10 lx), 1: Dim (200 lx), 2: Golden (4,000 lx), 3: Daylight (15,000 lx), 4: Harsh Sun (60,000 lx)
+      motionSpeed: 1,     // 0: Static, 1: Normal, 2: Fast, 3: Sports, 4: Supersonic
+      distanceMeters: 2.0,// Subject distance in meters
+      dofTarget: 0,       // 0: Shallow, 1: Balanced, 2: Deep
+      
+      // Telemetry extracted from image
+      avgLuminance: 128,
+      estimatedKelvin: 5400,
+      estimatedTint: "+0.2 M",
+      clippedHighlightsRatio: 0.0,
+      dominantColors: ['#d97706', '#38bdf8', '#10b981', '#6366f1']
+    };
+
+    // Camera Hardware Profiles Database
+    const GEAR_PROFILES = {
+      NIKON_Z50_II: {
+        name: "Nikon Z50 II",
+        cropFactor: 1.5,
+        type: "Nikon DX / APS-C (EXPEED 7 20.9MP)",
+        baseIsoStill: [100, 400],
+        baseIsoVideoSLog3: [800, 1600], // N-Log base ISO is 800 (or Flat at ISO 100)
+        baseIsoSCinetone: [100, 400],
+        maxAperture: "f/1.8",
+        nativeLensRecommended: "24mm - 50mm DX / Z-mount",
+        pictureProfiles: "N-Log (10-bit), Flat Picture Control, HLG",
+        metering: "Nikon Matrix / Highlight-Weighted Metering",
+        afMode: "AF-C • 3D-Tracking Subject Detect (People/Bird/Vehicle)"
+      },
+      SONY_APS_C: {
+        name: "Sony ZV-E10 II / A6700",
+        cropFactor: 1.5,
+        type: "APS-C (BSI 26MP)",
+        baseIsoStill: [100, 320],
+        baseIsoVideoSLog3: [800, 2500],
+        baseIsoSCinetone: [125, 400],
+        maxAperture: "f/1.8",
+        nativeLensRecommended: "35mm - 50mm",
+        pictureProfiles: "S-Log3 (PP9), S-Cinetone (PP11)",
+        metering: "Multi / Matrix Meter",
+        afMode: "AF-C • Real-time Eye AF"
+      },
+      FULL_FRAME: {
+        name: "Sony A7 IV / Nikon Z6 III / Canon R6 II",
+        cropFactor: 1.0,
+        type: "Full Frame 35mm",
+        baseIsoStill: [100, 400],
+        baseIsoVideoSLog3: [800, 3200],
+        baseIsoSCinetone: [100, 500],
+        maxAperture: "f/1.4",
+        nativeLensRecommended: "50mm - 85mm",
+        pictureProfiles: "Log (N-Log / S-Log3 / C-Log3)",
+        metering: "Multi-Zone / Matrix Meter",
+        afMode: "AF-C • Deep Learning Subject AF"
+      },
+      FUJI_X: {
+        name: "Fujifilm X-T5 / X-H2s",
+        cropFactor: 1.5,
+        type: "APS-C (X-Trans V)",
+        baseIsoStill: [125, 500],
+        baseIsoVideoSLog3: [640, 2500], // F-Log2 base
+        baseIsoSCinetone: [160, 640],
+        maxAperture: "f/1.4",
+        nativeLensRecommended: "33mm - 56mm",
+        pictureProfiles: "F-Log2 / ETERNA Cinema",
+        metering: "Multi / Center-Weighted",
+        afMode: "AF-C • Zone Tracking AF"
+      },
+      MFT: {
+        name: "Panasonic GH6 / G9 II / BMPCC 4K",
+        cropFactor: 2.0,
+        type: "Micro Four Thirds",
+        baseIsoStill: [100, 400],
+        baseIsoVideoSLog3: [640, 2000], // V-Log base
+        baseIsoSCinetone: [200, 800],
+        maxAperture: "f/1.7",
+        nativeLensRecommended: "25mm - 42.5mm",
+        pictureProfiles: "V-Log / Cine-D2",
+        metering: "Multiple Metering",
+        afMode: "AF-C • Human/Face/Eye Detect"
+      }
+    };
+
+    // Canvas & WebRTC Handles
+    let webcamStream = null;
+    let videoEl = null;
+    let mainCanvas = null;
+    let mainCtx = null;
+    let histCanvas = null;
+    let histCtx = null;
+    let paradeCanvas = null;
+    let paradeCtx = null;
+    let animFrameId = null;
+
+    /* ==========================================================================
+       2. INITIALIZATION & LIFECYCLE
+       ========================================================================== */
+    window.onload = function() {
+      lucide.createIcons();
+      videoEl = document.getElementById('webcam-feed');
+      mainCanvas = document.getElementById('viewfinder-canvas');
+      mainCtx = mainCanvas.getContext('2d');
+      histCanvas = document.getElementById('histogram-canvas');
+      histCtx = histCanvas.getContext('2d');
+      paradeCanvas = document.getElementById('rgb-parade-canvas');
+      paradeCtx = paradeCanvas.getContext('2d');
+
+      // Set internal pixel resolution for sharp displays
+      resizeCanvases();
+      window.addEventListener('resize', resizeCanvases);
+
+      // Load default initial scene
+      loadPreset('golden_portrait');
+      updateGearProfile();
+    };
+
+    function resizeCanvases() {
+      if (!mainCanvas || !histCanvas || !paradeCanvas) return;
+      const rect = mainCanvas.getBoundingClientRect();
+      mainCanvas.width = Math.max(rect.width, 640);
+      mainCanvas.height = Math.max(rect.height, 360);
+
+      const hRect = histCanvas.getBoundingClientRect();
+      histCanvas.width = hRect.width || 300;
+      histCanvas.height = hRect.height || 96;
+
+      const pRect = paradeCanvas.getBoundingClientRect();
+      paradeCanvas.width = pRect.width || 300;
+      paradeCanvas.height = pRect.height || 96;
+    }
+
+    /* ==========================================================================
+       3. WEBRTC LIVE CAMERA INTEGRATION
+       ========================================================================== */
+    async function toggleWebcam() {
+      const btn = document.getElementById('btn-camera-toggle');
+      const btnText = document.getElementById('camera-btn-text');
+
+      if (state.isWebcamActive) {
+        // Stop stream
+        if (webcamStream) {
+          webcamStream.getTracks().forEach(track => track.stop());
+          webcamStream = null;
+        }
+        state.isWebcamActive = false;
+        videoEl.classList.add('hidden');
+        btnText.innerText = "Use Phone/Webcam";
+        btn.classList.remove('bg-red-600', 'text-white');
+        btn.classList.add('bg-cyan-600', 'text-black');
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        loadPreset('golden_portrait');
+        showToast("Webcam Paused", "Returned to synthetic analysis frame.");
+      } else {
+        // Request rear camera for phones if available
+        try {
+          const constraints = {
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            },
+            audio: false
+          };
+          webcamStream = await navigator.mediaDevices.getUserMedia(constraints);
+          videoEl.srcObject = webcamStream;
+          videoEl.classList.remove('hidden');
+          state.isWebcamActive = true;
+          btnText.innerText = "Stop Camera";
+          btn.classList.remove('bg-cyan-600', 'text-black');
+          btn.classList.add('bg-red-600', 'text-white');
+          
+          showToast("Live Camera Active", "Sampling scene lux, temperature, and color histogram live.");
+          processLiveVideoLoop();
+        } catch (err) {
+          console.error("Camera access error:", err);
+          showToast("Camera Permission Needed", "Could not access hardware camera. Check browser permissions.");
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function processLiveVideoLoop() {
+      if (!state.isWebcamActive || !videoEl || videoEl.paused || videoEl.ended) return;
+
+      if (videoEl.readyState >= 2) {
+        // Render video onto canvas
+        mainCtx.drawImage(videoEl, 0, 0, mainCanvas.width, mainCanvas.height);
+        
+        // Analyze frame periodically
+        if (Math.random() < 0.25) { // every ~4 frames to keep performance high
+          analyzeCurrentFrame();
+        }
+      }
+
+      animFrameId = requestAnimationFrame(processLiveVideoLoop);
+    }
+
+    /* ==========================================================================
+       4. PRESET GENERATOR (Procedural Photographic Scenes)
+       ========================================================================== */
+    function loadPreset(type) {
+      if (state.isWebcamActive) {
+        toggleWebcam(); // Turn off camera if running
+      }
+
+      const w = mainCanvas.width;
+      const h = mainCanvas.height;
+
+      mainCtx.save();
+      mainCtx.clearRect(0, 0, w, h);
+
+      if (type === 'golden_portrait') {
+        // Warm sunset background
+        const grad = mainCtx.createRadialGradient(w * 0.7, h * 0.3, 20, w * 0.5, h * 0.5, w * 0.8);
+        grad.addColorStop(0, '#f97316'); // Bright warm sun
+        grad.addColorStop(0.4, '#ea580c');
+        grad.addColorStop(0.8, '#431407');
+        grad.addColorStop(1, '#0c0a09');
+        mainCtx.fillStyle = grad;
+        mainCtx.fillRect(0, 0, w, h);
+
+        // Portrait subject silhouette / face
+        drawSubjectFigure(w * 0.45, h * 0.5, '#e0a96d', '#7c2d12', 'portrait');
+
+        state.ambientLuxLevel = 2; // Golden hour
+        state.motionSpeed = 1;     // Gentle posing
+        state.distanceMeters = 1.8;
+        state.dofTarget = 0;       // Creamy bokeh portrait
+        document.getElementById('telemetry-scene-class').innerText = "Golden Hour Portrait";
+      } else if (type === 'fast_sports') {
+        // Daylight stadium turf / fast action
+        const grad = mainCtx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#38bdf8'); // Daylight blue sky
+        grad.addColorStop(0.4, '#bae6fd');
+        grad.addColorStop(0.45, '#15803d'); // Green grass
+        grad.addColorStop(1, '#14532d');
+        mainCtx.fillStyle = grad;
+        mainCtx.fillRect(0, 0, w, h);
+
+        drawSubjectFigure(w * 0.5, h * 0.55, '#f87171', '#1e293b', 'sports');
+
+        state.ambientLuxLevel = 3; // Bright Daylight
+        state.motionSpeed = 3;     // Fast Sports Action
+        state.distanceMeters = 8.5;
+        state.dofTarget = 1;       // Balanced focus
+        document.getElementById('telemetry-scene-class').innerText = "Track & Field Sprinter";
+      } else if (type === 'concert_stage') {
+        // Deep purple & neon stage lighting
+        const grad = mainCtx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, '#0f172a');
+        grad.addColorStop(0.3, '#581c87');
+        grad.addColorStop(0.7, '#1e1b4b');
+        grad.addColorStop(1, '#030712');
+        mainCtx.fillStyle = grad;
+        mainCtx.fillRect(0, 0, w, h);
+
+        // Stage spot beam
+        mainCtx.beginPath();
+        mainCtx.moveTo(w * 0.2, 0);
+        mainCtx.lineTo(w * 0.6, h);
+        mainCtx.lineTo(w * 0.3, h);
+        mainCtx.fillStyle = 'rgba(236, 72, 153, 0.25)';
+        mainCtx.fill();
+
+        drawSubjectFigure(w * 0.45, h * 0.6, '#cbd5e1', '#09090b', 'stage');
+
+        state.ambientLuxLevel = 1; // Dim Indoors / Stage
+        state.motionSpeed = 2;     // Moving musician
+        state.distanceMeters = 5.0;
+        state.dofTarget = 0;       // Wide open
+        document.getElementById('telemetry-scene-class').innerText = "Concert / Stage Performance";
+      } else if (type === 'night_street') {
+        // Moody dark neon street
+        const grad = mainCtx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#030712');
+        grad.addColorStop(0.6, '#0f172a');
+        grad.addColorStop(1, '#1e293b');
+        mainCtx.fillStyle = grad;
+        mainCtx.fillRect(0, 0, w, h);
+
+        // Neon reflections
+        mainCtx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+        mainCtx.fillRect(w * 0.1, h * 0.3, 40, h * 0.5);
+        mainCtx.fillStyle = 'rgba(6, 182, 212, 0.4)';
+        mainCtx.fillRect(w * 0.75, h * 0.4, 50, h * 0.5);
+
+        drawSubjectFigure(w * 0.5, h * 0.65, '#f59e0b', '#020617', 'night');
+
+        state.ambientLuxLevel = 0; // Low light night
+        state.motionSpeed = 1;
+        state.distanceMeters = 3.5;
+        state.dofTarget = 0;
+        document.getElementById('telemetry-scene-class').innerText = "Night City Cinematic";
+      }
+
+      mainCtx.restore();
+      syncSlidersFromState();
+      analyzeCurrentFrame();
+    }
+
+    function drawSubjectFigure(x, y, skinColor, bodyColor, mode) {
+      mainCtx.save();
+      // Head
+      mainCtx.beginPath();
+      mainCtx.arc(x, y - 70, 24, 0, Math.PI * 2);
+      mainCtx.fillStyle = skinColor;
+      mainCtx.shadowColor = skinColor;
+      mainCtx.shadowBlur = 10;
+      mainCtx.fill();
+
+      // Torso / Pose
+      mainCtx.beginPath();
+      mainCtx.fillStyle = bodyColor;
+      if (mode === 'sports') {
+        // Leaning dynamic angle
+        mainCtx.moveTo(x - 20, y - 45);
+        mainCtx.lineTo(x + 35, y - 45);
+        mainCtx.lineTo(x + 50, y + 40);
+        mainCtx.lineTo(x - 30, y + 40);
+      } else {
+        // Upright portrait/performer
+        mainCtx.moveTo(x - 35, y - 45);
+        mainCtx.lineTo(x + 35, y - 45);
+        mainCtx.lineTo(x + 45, y + 60);
+        mainCtx.lineTo(x - 45, y + 60);
+      }
+      mainCtx.closePath();
+      mainCtx.fill();
+      mainCtx.restore();
+    }
+
+    /* ==========================================================================
+       5. IMAGE FILE UPLOAD HANDLER
+       ========================================================================== */
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          if (state.isWebcamActive) toggleWebcam();
+          mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+          mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
+          document.getElementById('telemetry-scene-class').innerText = "Uploaded Custom Frame";
+          analyzeCurrentFrame();
+          showToast("Image Loaded", "Calculated custom color temperature and exposure histogram.");
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* ==========================================================================
+       6. ALGORITHMIC SCENE ANALYSIS & SCOPES (Color, Kelvin, Scopes)
+       ========================================================================== */
+    function analyzeCurrentFrame() {
+      if (!mainCanvas || !mainCtx) return;
+
+      const w = mainCanvas.width;
+      const h = mainCanvas.height;
+      if (w === 0 || h === 0) return;
+
+      // Extract pixel data (sample down for fluid real-time speed)
+      let imgData;
+      try {
+        imgData = mainCtx.getImageData(0, 0, w, h);
+      } catch (e) {
+        console.warn("Canvas getImageData tainted by CORS", e);
+        return;
+      }
+      const data = imgData.data;
+      const len = data.length;
+
+      // Histogram bins (256 levels)
+      const histLum = new Uint32Array(256);
+      const histR = new Uint32Array(256);
+      const histG = new Uint32Array(256);
+      const histB = new Uint32Array(256);
+
+      let totalLum = 0;
+      let totalR = 0;
+      let totalG = 0;
+      let totalB = 0;
+      let clippedHighs = 0;
+      const sampleStep = 8; // Step by 8 bytes (every 2nd pixel) for speed
+      let pixelCount = 0;
+
+      for (let i = 0; i < len; i += 4 * sampleStep) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        // Standard Rec.709 Luminance weights
+        const lum = Math.round(0.2126 * r + 0.7152 * g + 0.0722 * b);
+
+        histLum[lum]++;
+        histR[r]++;
+        histG[g]++;
+        histB[b]++;
+
+        totalLum += lum;
+        totalR += r;
+        totalG += g;
+        totalB += b;
+
+        if (lum > 250) clippedHighs++;
+        pixelCount++;
+      }
+
+      const avgLum = Math.round(totalLum / pixelCount);
+      const avgR = totalR / pixelCount;
+      const avgG = totalG / pixelCount;
+      const avgB = totalB / pixelCount;
+
+      state.avgLuminance = avgLum;
+      state.clippedHighlightsRatio = (clippedHighs / pixelCount);
+
+      // Estimate Color Temperature (Kelvin) from Blue/Red ratio
+      // If R is higher -> Warm (3200K - 4500K); if B is higher -> Cool / Shade (6500K - 7500K)
+      let estKelvin = 5400;
+      const rbRatio = avgR / (avgB + 0.001);
+      if (rbRatio > 1.4) {
+        estKelvin = Math.round(3200 + (1.9 - rbRatio) * 1000); // 3200K - 4000K
+      } else if (rbRatio < 0.85) {
+        estKelvin = Math.round(6500 + (0.85 - rbRatio) * 3000); // 6500K - 7500K
+      } else {
+        estKelvin = Math.round(5200 + (1.2 - rbRatio) * 800); // ~5500K Daylight
+      }
+      estKelvin = Math.max(2800, Math.min(8500, estKelvin));
+      state.estimatedKelvin = estKelvin;
+
+      // Tint estimate: Green vs Magenta (G vs (R+B)/2)
+      const expectedG = (avgR + avgB) / 2;
+      const tintDiff = avgG - expectedG;
+      if (tintDiff > 12) state.estimatedTint = "+1.0 Green (Fluorescent)";
+      else if (tintDiff < -12) state.estimatedTint = "+1.2 Magenta Bias";
+      else state.estimatedTint = "Neutral (±0.2)";
+
+      // Draw Live Scopes
+      drawHistogram(histLum, histR, histG, histB);
+      drawRGBParade(histR, histG, histB);
+
+      // Update Swatches from central quadrant
+      updatePaletteSwatches(data, w, h);
+
+      // Update HUD Readings
+      updateViewfinderHUD();
+
+      // Run Exposure Engine
+      recalculateExposure();
+    }
+
+    function drawHistogram(lum, r, g, b) {
+      if (!histCtx) return;
+      const w = histCanvas.width;
+      const h = histCanvas.height;
+      histCtx.clearRect(0, 0, w, h);
+
+      // Find max peak for normalization
+      let maxVal = 1;
+      for (let i = 0; i < 256; i++) {
+        if (lum[i] > maxVal) maxVal = lum[i];
+      }
+
+      // Draw subtle grid lines
+      histCtx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+      histCtx.lineWidth = 1;
+      histCtx.beginPath();
+      histCtx.moveTo(w * 0.25, 0); histCtx.lineTo(w * 0.25, h);
+      histCtx.moveTo(w * 0.5, 0); histCtx.lineTo(w * 0.5, h);
+      histCtx.moveTo(w * 0.75, 0); histCtx.lineTo(w * 0.75, h);
+      histCtx.stroke();
+
+      // Render Luminance Area with Cyan Glow
+      histCtx.beginPath();
+      histCtx.moveTo(0, h);
+      for (let i = 0; i < 256; i++) {
+        const x = (i / 255) * w;
+        const barH = (lum[i] / maxVal) * (h - 6);
+        histCtx.lineTo(x, h - barH);
+      }
+      histCtx.lineTo(w, h);
+      histCtx.closePath();
+
+      const grad = histCtx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(0, 240, 255, 0.6)');
+      grad.addColorStop(1, 'rgba(0, 240, 255, 0.05)');
+      histCtx.fillStyle = grad;
+      histCtx.fill();
+
+      // Stroke profile curve
+      histCtx.strokeStyle = '#00f0ff';
+      histCtx.lineWidth = 1.5;
+      histCtx.beginPath();
+      for (let i = 0; i < 256; i++) {
+        const x = (i / 255) * w;
+        const barH = (lum[i] / maxVal) * (h - 6);
+        if (i === 0) histCtx.moveTo(x, h - barH);
+        else histCtx.lineTo(x, h - barH);
+      }
+      histCtx.stroke();
+    }
+
+    function drawRGBParade(r, g, b) {
+      if (!paradeCtx) return;
+      const w = paradeCanvas.width;
+      const h = paradeCanvas.height;
+      paradeCtx.clearRect(0, 0, w, h);
+
+      const subW = w / 3;
+
+      function drawChannel(bin, colorHex, offsetX) {
+        let max = 1;
+        for (let i = 0; i < 256; i++) if (bin[i] > max) max = bin[i];
+
+        paradeCtx.strokeStyle = colorHex;
+        paradeCtx.lineWidth = 1.2;
+        paradeCtx.beginPath();
+        for (let i = 0; i < 256; i++) {
+          const x = offsetX + (i / 255) * subW;
+          const barH = (bin[i] / max) * (h - 6);
+          if (i === 0) paradeCtx.moveTo(x, h - barH);
+          else paradeCtx.lineTo(x, h - barH);
+        }
+        paradeCtx.stroke();
+      }
+
+      // Draw R, G, B side by side
+      drawChannel(r, '#f87171', 0);
+      drawChannel(g, '#4ade80', subW);
+      drawChannel(b, '#60a5fa', subW * 2);
+
+      // Separator lines
+      paradeCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      paradeCtx.beginPath();
+      paradeCtx.moveTo(subW, 0); paradeCtx.lineTo(subW, h);
+      paradeCtx.moveTo(subW * 2, 0); paradeCtx.lineTo(subW * 2, h);
+      paradeCtx.stroke();
+    }
+
+    function updatePaletteSwatches(data, w, h) {
+      // Pick 4 coordinates across center area
+      const pts = [
+        Math.floor(w * 0.3) + Math.floor(h * 0.3) * w,
+        Math.floor(w * 0.5) + Math.floor(h * 0.4) * w,
+        Math.floor(w * 0.7) + Math.floor(h * 0.6) * w,
+        Math.floor(w * 0.5) + Math.floor(h * 0.8) * w,
+      ];
+      for (let s = 1; s <= 4; s++) {
+        const idx = pts[s - 1] * 4;
+        if (idx < data.length) {
+          const hex = `rgb(${data[idx]}, ${data[idx+1]}, ${data[idx+2]})`;
+          const swatch = document.getElementById(`swatch-${s}`);
+          if (swatch) swatch.style.backgroundColor = hex;
+        }
+      }
+    }
+
+    function updateViewfinderHUD() {
+      const luxLabels = ["~25 LUX (Night)", "~350 LUX (Dim)", "~3,800 LUX (Golden/Shade)", "~15,000 LUX (Daylight)", "~70,000 LUX (Direct Sun)"];
+      const evVals = ["EV 3.2", "EV 7.5", "EV 12.1", "EV 14.8", "EV 16.5"];
+      
+      document.getElementById('hud-lux-readout').innerText = `${evVals[state.ambientLuxLevel]} • ${luxLabels[state.ambientLuxLevel]}`;
+      document.getElementById('hud-kelvin-readout').innerText = `WB EST: ${state.estimatedKelvin}K • ${state.estimatedTint}`;
+      document.getElementById('hud-dof-est').innerText = `EST DIST: ${state.distanceMeters.toFixed(1)} m`;
+
+      // Clipping status
+      const clipEl = document.getElementById('hud-clipping-status');
+      if (state.clippedHighlightsRatio > 0.05) {
+        clipEl.innerText = `HIGHLIGHT WARNING: ${(state.clippedHighlightsRatio * 100).toFixed(0)}% BLOWN`;
+        clipEl.className = "text-[10px] font-mono bg-red-950/90 text-red-300 border border-red-700 px-2 py-0.5 rounded animate-pulse";
+      } else {
+        clipEl.innerText = "HIGHLIGHTS: PROTECTED (ETTR OPTIMAL)";
+        clipEl.className = "text-[10px] font-mono bg-black/80 px-2 py-1 rounded text-cyan-300";
+      }
+    }
+
+    /* ==========================================================================
+       7. MANUAL CAMERA EXPOSURE ENGINE (STILLS & VIDEO)
+       ========================================================================== */
+    function recalculateExposure() {
+      const gear = GEAR_PROFILES[state.cameraPreset];
+
+      // 1. Focal Length Recommendation based on Distance & Sensor Crop
+      let baseFocal = 50;
+      if (state.distanceMeters < 0.8) {
+        baseFocal = 30; // Macro / Close-up
+        document.getElementById('rec-aperture-reason').innerText = "Macro field flatness";
+      } else if (state.distanceMeters <= 2.5) {
+        baseFocal = Math.round(50 / gear.cropFactor); // Portrait (effective ~75-85mm)
+        document.getElementById('rec-aperture-reason').innerText = "Pleasing portrait separation";
+      } else if (state.distanceMeters > 7) {
+        baseFocal = Math.round(24 / gear.cropFactor); // Landscape / wide
+        document.getElementById('rec-aperture-reason').innerText = "Edge-to-edge sharpness";
+      } else {
+        baseFocal = Math.round(35 / gear.cropFactor); // General documentary
+        document.getElementById('rec-aperture-reason').innerText = "Natural perspective";
+      }
+      document.getElementById('rec-focal-length').innerText = `${baseFocal}mm (equiv: ${Math.round(baseFocal * gear.cropFactor)}mm)`;
+
+      // 2. Aperture Recommendation based on DOF Intent & Ambient Lux
+      let recF = "f/2.8";
+      if (state.dofTarget === 0) {
+        // Ultra shallow bokeh
+        recF = (state.ambientLuxLevel >= 4) ? "f/2.0" : gear.maxAperture;
+      } else if (state.dofTarget === 1) {
+        // Balanced
+        recF = (state.ambientLuxLevel <= 1) ? "f/2.8" : "f/4.0";
+      } else {
+        // Deep focus / landscape / group
+        recF = "f/8.0";
+      }
+
+      // ==========================================
+      // STILL PHOTO CALCULATION
+      // ==========================================
+      if (state.mode === 'STILL') {
+        // Motion rule for Shutter Speed
+        let shutterStr = "1/250s";
+        let shutterReason = "Standard handheld freeze";
+        switch (state.motionSpeed) {
+          case 0: // Static / Tripod
+            shutterStr = (state.ambientLuxLevel === 0) ? "1/15s (Use Tripod)" : "1/125s";
+            shutterReason = "Static subject sharpness";
+            break;
+          case 1: // Walking / Natural
+            shutterStr = "1/250s";
+            shutterReason = "Freeze gentle gestures";
+            break;
+          case 2: // Running / Pets
+            shutterStr = "1/500s";
+            shutterReason = "Action freeze minimum";
+            break;
+          case 3: // Fast Sports / Birds
+            shutterStr = "1/1600s";
+            shutterReason = "High-speed freeze";
+            break;
+          case 4: // Supersonic / Splash
+            shutterStr = "1/4000s";
+            shutterReason = "Ultra-high velocity";
+            break;
+        }
+
+        // ISO Calculation based on Lux & Shutter
+        let recIso = gear.baseIsoStill[0];
+        let isoReason = "Lowest noise baseline";
+        if (state.ambientLuxLevel === 0) {
+          recIso = (gear.baseIsoStill[1] || 1600) * 2;
+          isoReason = "Low-light amplification";
+        } else if (state.ambientLuxLevel === 1) {
+          recIso = gear.baseIsoStill[1] || 800;
+          isoReason = "Dual-gain secondary base";
+        } else {
+          recIso = gear.baseIsoStill[0];
+        }
+
+        // DOM Updates for Still
+        document.getElementById('rec-aperture').innerText = recF;
+        document.getElementById('rec-shutter').innerText = shutterStr;
+        document.getElementById('rec-shutter-reason').innerText = shutterReason;
+        document.getElementById('rec-iso').innerText = `ISO ${recIso}`;
+        document.getElementById('rec-iso-reason').innerText = isoReason;
+        
+        // Focus & Drive recommendations with profile-specific intelligence
+        if (state.cameraPreset === 'NIKON_Z50_II') {
+          if (state.motionSpeed >= 2) {
+            document.getElementById('rec-focus-mode').innerText = "AF-C • 3D-Tracking (Auto Subject Detect)";
+            document.getElementById('rec-drive-mode').innerText = "Drive: Continuous H (11 fps mechanical / up to 30 fps C30)";
+          } else {
+            document.getElementById('rec-focus-mode').innerText = "AF-A / AF-C • 3D-Tracking (People / Eye AF)";
+            document.getElementById('rec-drive-mode').innerText = "Drive: Single Frame (AF Priority)";
+          }
+          document.getElementById('rec-metering').innerText = "Nikon Matrix Metering (or Highlight-Weighted)";
+        } else if (state.motionSpeed >= 2) {
+          document.getElementById('rec-focus-mode').innerText = gear.afMode || "AF-C • Wide / Tracking AF";
+          document.getElementById('rec-drive-mode').innerText = "Drive: Continuous Hi+ (Burst)";
+          document.getElementById('rec-metering').innerText = gear.metering || "Multi / Matrix Meter";
+        } else {
+          document.getElementById('rec-focus-mode').innerText = gear.afMode || "AF-C • Real-time Eye AF";
+          document.getElementById('rec-drive-mode').innerText = "Drive: Single Shooting (AF Priority)";
+          document.getElementById('rec-metering').innerText = gear.metering || "Multi / Matrix Meter";
+        }
+
+        // White balance
+        document.getElementById('rec-wb-kelvin').innerText = `${state.estimatedKelvin}K (Manual Locked)`;
+        document.getElementById('rec-wb-tint').innerText = `Tint: ${state.estimatedTint}`;
+
+        document.getElementById('rec-pro-tip-title').innerText = `${gear.name} Stills Strategy`;
+        if (state.cameraPreset === 'NIKON_Z50_II') {
+          document.getElementById('rec-pro-tip-desc').innerText = 
+            `EXPEED 7 on the Z50 II provides rapid 3D tracking. For post-production color grading, shoot in RAW (14-bit) with Picture Control set to 'Flat' or 'Neutral'. For instant out-of-camera delivery, select 'Portrait' or custom Picture Control recipes.`;
+        } else {
+          document.getElementById('rec-pro-tip-desc').innerText = 
+            `Keep your shutter at or above ${shutterStr} to avoid motion blur. If shooting RAW on the ${gear.name}, expose middle gray to +0.7 EV to maximize shadow dynamic range.`;
+        }
+      } 
+      // ==========================================
+      // VIDEO CINEMA CALCULATION (180° Shutter Rule + ND)
+      // ==========================================
+      else {
+        const fps = parseInt(document.getElementById('video-fps-select').value, 10);
+        state.videoFps = fps;
+
+        // 180-Degree Rule Shutter Speed = 1 / (2 * fps)
+        let exactShutter = 1 / (2 * fps);
+        let shutterLabel = `1/${fps * 2}s`;
+        if (fps === 24) shutterLabel = "1/48s (or 1/50s)";
+        else if (fps === 60) shutterLabel = "1/120s";
+        else if (fps === 120) shutterLabel = "1/240s";
+
+        // Video Base ISO calculation
+        let videoIso = gear.baseIsoVideoSLog3[0];
+        let isoReason = "Log Native Low Base";
+        if (state.cameraPreset === 'NIKON_Z50_II') {
+          videoIso = (state.ambientLuxLevel <= 1) ? 1600 : 800;
+          isoReason = (videoIso === 800) ? "N-Log Base ISO 800" : "N-Log Boosted Low Light";
+        } else if (state.ambientLuxLevel <= 1) {
+          videoIso = gear.baseIsoVideoSLog3[1];
+          isoReason = `Dual Base High (cleaner than ${videoIso/2})`;
+        }
+
+        // Neutral Density (ND) Filter Math
+        let ndStopsNeeded = 0;
+        let ndFilterStr = "No ND Required";
+        let ndReason = "Exposure matches native lighting";
+
+        if (state.ambientLuxLevel === 2) {
+          ndStopsNeeded = (recF.includes("1.") || recF.includes("2.0")) ? 3 : 1;
+        } else if (state.ambientLuxLevel === 3) {
+          ndStopsNeeded = 5;
+        } else if (state.ambientLuxLevel === 4) {
+          ndStopsNeeded = 7;
+        }
+
+        if (ndStopsNeeded > 0) {
+          const filterDensity = Math.pow(2, ndStopsNeeded);
+          ndFilterStr = `${ndStopsNeeded}-Stop ND (ND${filterDensity} / 0.${ndStopsNeeded * 3})`;
+          ndReason = `Crucial to lock ${shutterLabel} at ${recF}`;
+        }
+
+        document.getElementById('rec-aperture').innerText = recF;
+        document.getElementById('rec-shutter').innerText = shutterLabel;
+        document.getElementById('rec-shutter-reason').innerText = `180° Shutter Angle at ${fps}fps`;
+        document.getElementById('rec-iso').innerText = `ISO ${videoIso}`;
+        document.getElementById('rec-iso-reason').innerText = isoReason;
+
+        document.getElementById('rec-video-shutter-rule').innerText = `180° Rule: ${shutterLabel}`;
+        document.getElementById('rec-nd-filter').innerText = ndFilterStr;
+        document.getElementById('rec-nd-reason').innerText = ndReason;
+
+        // Picture Profile Advice per Gear
+        if (state.cameraPreset === 'NIKON_Z50_II') {
+          document.getElementById('rec-picture-profile').innerText = "N-Log (10-bit SDR/HDR) or Flat";
+          document.getElementById('rec-log-exposure-target').innerText = `Target: Middle Gray ~38 IRE (+1.0 EV overexposure)`;
+          document.getElementById('rec-pro-tip-title').innerText = "Nikon Z50 II N-Log Cinema Guidance";
+          document.getElementById('rec-pro-tip-desc').innerText = 
+            `Lock shutter at ${shutterLabel} using the 180° rule with a ${ndFilterStr}. Shoot in 10-bit N-Log at Base ISO 800. Expose skin tones slightly right of center (IRE 55-65) and set zebra highlights to 235 to safeguard against clipping.`;
+        } else if (state.cameraPreset === 'SONY_APS_C' || state.cameraPreset === 'FULL_FRAME') {
+          document.getElementById('rec-picture-profile').innerText = "S-Log3 / S-Gamut3.Cine (PP9)";
+          document.getElementById('rec-log-exposure-target').innerText = `Overexpose Multi-Meter to +1.3 ~ +1.7 EV`;
+          document.getElementById('rec-pro-tip-title').innerText = "Cinema Motion Blur & 180° Rule";
+          document.getElementById('rec-pro-tip-desc').innerText = 
+            `To preserve filmic organic motion blur at ${fps} fps, never increase shutter speed to darken the image. Always keep shutter locked at ${shutterLabel} and use a variable ND filter (${ndFilterStr}) to dial down daylight!`;
+        } else if (state.cameraPreset === 'FUJI_X') {
+          document.getElementById('rec-picture-profile').innerText = "F-Log2 / Wide DR";
+          document.getElementById('rec-log-exposure-target').innerText = "Target +1.0 EV over normal";
+          document.getElementById('rec-pro-tip-title').innerText = "Fujifilm F-Log2 Guidelines";
+          document.getElementById('rec-pro-tip-desc').innerText = `Preserve 180° motion blur at ${shutterLabel} with ${ndFilterStr}. Target base ISO 640 or 1250 in F-Log2.`;
+        } else {
+          document.getElementById('rec-picture-profile').innerText = "V-Log / Rec.709 Assist";
+          document.getElementById('rec-log-exposure-target').innerText = "Target middle grey at 42 IRE";
+          document.getElementById('rec-pro-tip-title').innerText = "Micro Four Thirds V-Log";
+          document.getElementById('rec-pro-tip-desc').innerText = `Lock shutter at ${shutterLabel} and use ${ndFilterStr} to balance light.`;
+        }
+      }
+    }
+
+    /* ==========================================================================
+       8. UI CONTROLS & INTERACTIVITY
+       ========================================================================== */
+    function switchShootMode(newMode) {
+      state.mode = newMode;
+      const btnStill = document.getElementById('btn-mode-still');
+      const btnVideo = document.getElementById('btn-mode-video');
+      const stillSection = document.getElementById('section-still-aux');
+      const videoSection = document.getElementById('section-video-aux');
+      const badgeIndicator = document.getElementById('badge-mode-indicator');
+
+      if (newMode === 'STILL') {
+        btnStill.className = "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all bg-cyan-500 text-black shadow-sm";
+        btnVideo.className = "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-white";
+        stillSection.classList.remove('hidden');
+        videoSection.classList.add('hidden');
+        badgeIndicator.innerText = "STILL PHOTOGRAPHY";
+        badgeIndicator.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700 font-semibold";
+      } else {
+        btnVideo.className = "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all bg-amber-500 text-black shadow-sm";
+        btnStill.className = "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-white";
+        videoSection.classList.remove('hidden');
+        stillSection.classList.add('hidden');
+        badgeIndicator.innerText = "VIDEO CINEMA (180° RULE)";
+        badgeIndicator.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-semibold";
+      }
+      recalculateExposure();
+      lucide.createIcons();
+    }
+
+    function updateGearProfile() {
+      const select = document.getElementById('camera-gear-select');
+      state.cameraPreset = select.value;
+      const gear = GEAR_PROFILES[state.cameraPreset];
+
+      document.getElementById('gear-name-display').innerText = `${gear.name} Profile`;
+      document.getElementById('gear-crop-badge').innerText = `Crop: ${gear.cropFactor}x • ${gear.type}`;
+      document.getElementById('gear-base-iso').innerText = `${gear.baseIsoVideoSLog3[0]} / ${gear.baseIsoVideoSLog3[1]}`;
+      document.getElementById('gear-max-aperture').innerText = gear.maxAperture;
+
+      recalculateExposure();
+    }
+
+    // Slider Event Callbacks
+    function onMotionSliderChange() {
+      state.motionSpeed = parseInt(document.getElementById('slider-motion').value, 10);
+      const labels = ["Static / Tripod", "Normal / Walking", "Running / Dynamic", "Fast Sports / Birds", "Supersonic Velocity"];
+      document.getElementById('val-motion-label').innerText = labels[state.motionSpeed];
+      recalculateExposure();
+    }
+
+    function onLightSliderChange() {
+      state.ambientLuxLevel = parseInt(document.getElementById('slider-light').value, 10);
+      const labels = ["Night / Candlelight (~25 lx)", "Dim Indoors (~350 lx)", "Golden / Shade (~4,000 lx)", "Bright Daylight (~15,000 lx)", "Harsh Midday Sun (~70,000 lx)"];
+      document.getElementById('val-light-label').innerText = labels[state.ambientLuxLevel];
+      updateViewfinderHUD();
+      recalculateExposure();
+    }
+
+    function onDistanceSliderChange() {
+      state.distanceMeters = parseFloat(document.getElementById('slider-distance').value);
+      const dist = state.distanceMeters;
+      let note = "";
+      if (dist < 0.8) note = "Macro / Detail";
+      else if (dist <= 2.5) note = "Head & Shoulders";
+      else if (dist <= 5.0) note = "Half / Full Body";
+      else note = "Distance / Landscape";
+
+      document.getElementById('val-dist-label').innerText = `${dist.toFixed(1)} m (~${(dist * 3.28).toFixed(1)} ft) • ${note}`;
+      document.getElementById('hud-dof-est').innerText = `EST DIST: ${dist.toFixed(1)} m`;
+      recalculateExposure();
+    }
+
+    function onDofSliderChange() {
+      state.dofTarget = parseInt(document.getElementById('slider-dof').value, 10);
+      const labels = ["Shallow (Creamy Bokeh)", "Balanced (Subject & Context)", "Deep Edge-to-Edge (f/8 - f/11)"];
+      document.getElementById('val-dof-label').innerText = labels[state.dofTarget];
+      recalculateExposure();
+    }
+
+    function syncSlidersFromState() {
+      document.getElementById('slider-motion').value = state.motionSpeed;
+      document.getElementById('slider-light').value = state.ambientLuxLevel;
+      document.getElementById('slider-distance').value = state.distanceMeters;
+      document.getElementById('slider-dof').value = state.dofTarget;
+
+      onMotionSliderChange();
+      onLightSliderChange();
+      onDistanceSliderChange();
+      onDofSliderChange();
+    }
+
+    function toggleGrid() {
+      state.gridEnabled = !state.gridEnabled;
+      const grid = document.getElementById('grid-overlay');
+      const btn = document.getElementById('btn-grid-toggle');
+      if (state.gridEnabled) {
+        grid.classList.remove('hidden');
+        btn.innerText = "GRID: ON";
+        btn.className = "px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 text-[11px] transition";
+      } else {
+        grid.classList.add('hidden');
+        btn.innerText = "GRID: OFF";
+        btn.className = "px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-500 border border-slate-700 text-[11px] transition";
+      }
+    }
+
+    function toggleZebras() {
+      state.zebrasEnabled = !state.zebrasEnabled;
+      const btn = document.getElementById('btn-zebra-toggle');
+      if (state.zebrasEnabled) {
+        btn.innerText = "ZEBRA: ON (95%+)";
+        btn.className = "px-2 py-0.5 rounded bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600 text-[11px] transition";
+        showToast("Zebra Patterns Active", "Displaying 95% IRE clipping warnings on hot specular highlights.");
+      } else {
+        btn.innerText = "ZEBRA: OFF";
+        btn.className = "px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 text-[11px] transition";
+      }
+    }
+
+    /* ==========================================================================
+       9. EXPORT & CHEAT SHEET CLIPBOARD GENERATOR
+       ========================================================================== */
+    function copyCheatSheet() {
+      const gear = GEAR_PROFILES[state.cameraPreset];
+      const aperture = document.getElementById('rec-aperture').innerText;
+      const shutter = document.getElementById('rec-shutter').innerText;
+      const iso = document.getElementById('rec-iso').innerText;
+      const focal = document.getElementById('rec-focal-length').innerText;
+      const wb = `${state.estimatedKelvin}K (${state.estimatedTint})`;
+
+      let text = `=== CINESHOT CAMERA CHEAT SHEET ===\n`;
+      text += `Camera Profile: ${gear.name}\n`;
+      text += `Mode: ${state.mode === 'STILL' ? 'Still Photo' : 'Video Cinema'}\n`;
+      text += `Aperture: ${aperture}\n`;
+      text += `Shutter Speed: ${shutter}\n`;
+      text += `ISO: ${iso}\n`;
+      text += `Lens Target: ${focal}\n`;
+      text += `White Balance: ${wb}\n`;
+
+      if (state.mode === 'VIDEO') {
+        const nd = document.getElementById('rec-nd-filter').innerText;
+        const profile = document.getElementById('rec-picture-profile').innerText;
+        text += `Framerate: ${state.videoFps} fps\n`;
+        text += `ND Filter: ${nd}\n`;
+        text += `Picture Profile: ${profile}\n`;
+      } else {
+        const focus = document.getElementById('rec-focus-mode').innerText;
+        text += `Focus Mode: ${focus}\n`;
+        text += `File Target: RAW Uncompressed\n`;
+      }
+      text += `==================================`;
+
+      // Copy using textarea fallback to comply with iframe permissions
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast("Cheat Sheet Copied!", "All manual dial settings copied to clipboard.");
+      } catch (err) {
+        showToast("Copy Failed", "Please manually review card settings.");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showToast(title, msg) {
+      const modal = document.getElementById('toast-modal');
+      document.getElementById('toast-title').innerText = title;
+      document.getElementById('toast-message').innerText = msg;
+
+      modal.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      modal.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        modal.classList.remove('translate-y-0', 'opacity-100');
+        modal.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
