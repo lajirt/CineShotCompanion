@@ -1,0 +1,350 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineShot Pro - Camera Companion & Scene Analyzer</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              900: '#06080d',
+              800: '#0c121e',
+              700: '#141d30',
+              600: '#1c2942',
+              accent: '#00f0ff',
+              neon: '#ffaa00',
+              lens: '#00ff66',
+              danger: '#ff3366',
+            }
+          },
+          fontFamily: {
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Viewfinder crosshairs & HUD styles */
+    .viewfinder-grid {
+      background-image: 
+        linear-gradient(to right, rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+      background-size: 33.333% 33.333%;
+    }
+    .hud-border {
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.08), inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+    .glow-amber {
+      box-shadow: 0 0 12px rgba(255, 170, 0, 0.4);
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090e17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1c2b44;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f0ff;
+    }
+  </style>
+</head>
+<body class="bg-cyber-900 text-slate-100 min-h-screen font-sans flex flex-col selection:bg-cyan-500 selection:text-black">
+
+  <!-- Header Nav -->
+  <header class="border-b border-slate-800 bg-cyber-800/90 backdrop-blur sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-gradient-to-tr from-cyan-600 to-blue-500 rounded-lg shadow-md shadow-cyan-500/20 text-black">
+          <i data-lucide="aperture" class="w-6 h-6 stroke-[2.5]"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-bold tracking-wider text-white">CINESHOT <span class="text-cyan-400 font-mono">PRO</span></span>
+            <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">DSLR/Cinema Companion</span>
+          </div>
+          <p class="text-xs text-slate-400">Computer Vision Scene Telemetry & Exposure Engine</p>
+        </div>
+      </div>
+
+      <!-- Quick Mode Switcher & Camera Gear Profile -->
+      <div class="flex items-center flex-wrap gap-2">
+        <!-- Photo / Video Switch -->
+        <div class="flex bg-cyber-900 p-1 rounded-lg border border-slate-700/80">
+          <button id="btn-mode-still" onclick="switchShootMode('STILL')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all bg-cyan-500 text-black shadow-sm">
+            <i data-lucide="camera" class="w-3.5 h-3.5"></i> STILL PHOTO
+          </button>
+          <button id="btn-mode-video" onclick="switchShootMode('VIDEO')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-400 hover:text-white">
+            <i data-lucide="video" class="w-3.5 h-3.5"></i> VIDEO CINEMA
+          </button>
+        </div>
+
+        <!-- Camera Preset Selector -->
+        <div class="relative">
+          <select id="camera-gear-select" onchange="updateGearProfile()" class="bg-cyber-700 text-xs text-slate-200 border border-slate-700 rounded-lg px-3 py-2 pr-8 focus:outline-none focus:border-cyan-400 font-mono cursor-pointer">
+            <option value="NIKON_Z50_II" selected>Nikon Z50 II (DX / APS-C 1.5x • EXPEED 7)</option>
+            <option value="SONY_APS_C">Sony ZV-E10 II / A6700 (APS-C 1.5x)</option>
+            <option value="FULL_FRAME">Full Frame (Sony A7 IV, Nikon Z6 III, Canon R6 II)</option>
+            <option value="FUJI_X">Fujifilm X-T5 / X-H2s (APS-C 1.5x)</option>
+            <option value="MFT">Micro Four Thirds (GH6, Lumix G9 II, BMPCC 4K - 2.0x)</option>
+          </select>
+        </div>
+
+        <button onclick="copyCheatSheet()" class="p-2 bg-cyber-700 hover:bg-slate-700 border border-slate-600 rounded-lg text-slate-200 hover:text-cyan-300 transition-colors" title="Copy Settings to Clipboard">
+          <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+    <!-- LEFT / TOP COLUMN: Viewfinder, Live Analyzer & Scopes (Col 7) -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+
+      <!-- Viewfinder Monitor -->
+      <div class="bg-cyber-800 rounded-xl border border-slate-800 p-3 shadow-2xl relative overflow-hidden flex flex-col">
+        <!-- Viewfinder Toolbar -->
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80 text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+            <span id="hud-status" class="text-slate-300 font-bold uppercase tracking-wider">OPTICAL TELEMETRY ACTIVE</span>
+            <span id="fps-counter" class="text-[11px] text-cyan-400">30 FPS</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleGrid()" id="btn-grid-toggle" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 text-[11px] transition">
+              GRID: ON
+            </button>
+            <button onclick="toggleZebras()" id="btn-zebra-toggle" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 text-[11px] transition">
+              ZEBRA: OFF
+            </button>
+          </div>
+        </div>
+
+        <!-- Viewfinder Canvas / Video Container -->
+        <div class="relative w-full aspect-[4/3] sm:aspect-[16/9] bg-black rounded-lg overflow-hidden flex items-center justify-center hud-border select-none group">
+          <!-- Live Video Stream -->
+          <video id="webcam-feed" playsinline autoplay muted class="absolute inset-0 w-full h-full object-cover hidden"></video>
+          <!-- Processing & Render Canvas -->
+          <canvas id="viewfinder-canvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
+          
+          <!-- Viewfinder Rule of Thirds Grid Overlay -->
+          <div id="grid-overlay" class="absolute inset-0 viewfinder-grid pointer-events-none"></div>
+
+          <!-- Central Target Crosshairs & Level Gauge -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <!-- Central Focus Box -->
+            <div id="af-target-box" class="w-24 h-24 sm:w-32 sm:h-32 border border-cyan-400/70 rounded-md relative flex items-center justify-center transition-all duration-300">
+              <div class="w-2 h-2 bg-cyan-400/90 rounded-full animate-ping"></div>
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] font-mono bg-black/80 px-1 rounded text-cyan-300 tracking-tighter">AI TRACKING: ACTIVE</div>
+              <!-- Corner brackets -->
+              <span class="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-cyan-300"></span>
+              <span class="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-cyan-300"></span>
+              <span class="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-cyan-300"></span>
+              <span class="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-cyan-300"></span>
+            </div>
+            <!-- Horizon Level line -->
+            <div class="absolute w-48 h-[1px] bg-cyan-500/30"></div>
+          </div>
+
+          <!-- On-Screen Viewfinder HUD Readings -->
+          <div class="absolute top-2 left-2 text-[11px] font-mono bg-black/75 backdrop-blur-sm border border-slate-700/80 rounded px-2 py-1 text-slate-300 flex flex-col gap-0.5">
+            <span class="text-cyan-400 font-bold" id="hud-lux-readout">EV: 12.4 • ~3,800 LUX</span>
+            <span id="hud-kelvin-readout">WB EST: 5400K (Daylight)</span>
+          </div>
+
+          <div class="absolute top-2 right-2 text-[11px] font-mono bg-black/75 backdrop-blur-sm border border-slate-700/80 rounded px-2 py-1 text-right text-slate-300">
+            <span class="text-amber-400 font-bold" id="hud-dof-est">EST DIST: 2.2 m</span>
+            <div id="hud-intent-badge" class="text-[10px] text-slate-400">PORTRAIT OPTICS</div>
+          </div>
+
+          <!-- Live Sample Color Swatches -->
+          <div class="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/70 p-1 rounded-md border border-slate-700">
+            <span class="text-[9px] font-mono text-slate-400 px-1">DOMINANT PALETTE:</span>
+            <div id="swatch-1" class="w-4 h-4 rounded-full border border-white/20 bg-slate-500"></div>
+            <div id="swatch-2" class="w-4 h-4 rounded-full border border-white/20 bg-amber-600"></div>
+            <div id="swatch-3" class="w-4 h-4 rounded-full border border-white/20 bg-cyan-700"></div>
+            <div id="swatch-4" class="w-4 h-4 rounded-full border border-white/20 bg-emerald-700"></div>
+          </div>
+
+          <!-- Live Zebra / Histogram Notice -->
+          <div class="absolute bottom-2 right-2 text-[10px] font-mono bg-black/80 px-2 py-1 rounded text-cyan-300">
+            <span id="hud-clipping-status">HIGHLIGHTS: SAFE (0% CLIPPED)</span>
+          </div>
+        </div>
+
+        <!-- Camera Feed Controller Buttons -->
+        <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <!-- Start Camera Button -->
+            <button id="btn-camera-toggle" onclick="toggleWebcam()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-black flex items-center gap-1.5 shadow-md shadow-cyan-600/30 transition">
+              <i data-lucide="video" class="w-3.5 h-3.5"></i> <span id="camera-btn-text">Use Phone/Webcam</span>
+            </button>
+
+            <!-- Custom Photo Upload -->
+            <label class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyber-700 hover:bg-slate-700 text-slate-200 border border-slate-600 cursor-pointer flex items-center gap-1.5 transition">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload Photo
+              <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+            </label>
+
+            <!-- Snapshot / Freeze Analysis -->
+            <button onclick="analyzeCurrentFrame()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1.5 transition">
+              <i data-lucide="scan" class="w-3.5 h-3.5"></i> Re-Analyze Frame
+            </button>
+          </div>
+
+          <!-- Preset Scenes -->
+          <div class="flex items-center gap-1 text-xs">
+            <span class="text-slate-400 font-mono text-[11px]">Presets:</span>
+            <button onclick="loadPreset('golden_portrait')" class="px-2 py-1 bg-cyber-700 hover:bg-slate-700 rounded text-[11px] text-amber-300 border border-amber-500/30">Portrait</button>
+            <button onclick="loadPreset('fast_sports')" class="px-2 py-1 bg-cyber-700 hover:bg-slate-700 rounded text-[11px] text-cyan-300 border border-cyan-500/30">Sports</button>
+            <button onclick="loadPreset('concert_stage')" class="px-2 py-1 bg-cyber-700 hover:bg-slate-700 rounded text-[11px] text-purple-300 border border-purple-500/30">Stage</button>
+            <button onclick="loadPreset('night_street')" class="px-2 py-1 bg-cyber-700 hover:bg-slate-700 rounded text-[11px] text-emerald-300 border border-emerald-500/30">Night</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime Scopes & Color Waveform Deck -->
+      <div class="bg-cyber-800 rounded-xl border border-slate-800 p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Luminance Histogram -->
+        <div class="bg-cyber-900 p-2.5 rounded-lg border border-slate-800 flex flex-col">
+          <div class="flex items-center justify-between mb-1.5 text-xs font-mono text-slate-400">
+            <span class="flex items-center gap-1 text-slate-300">
+              <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-cyan-400"></i> LUMINANCE HISTOGRAM
+            </span>
+            <span class="text-[10px] text-slate-500">0 (Shadows) &rarr; 255 (Highlights)</span>
+          </div>
+          <canvas id="histogram-canvas" class="w-full h-24 bg-black/90 rounded border border-slate-800"></canvas>
+          <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+            <span>Blacks (0-16)</span>
+            <span>Mids (~128)</span>
+            <span>Whites (235-255)</span>
+          </div>
+        </div>
+
+        <!-- RGB Parade & Skin Tone Vector Scope -->
+        <div class="bg-cyber-900 p-2.5 rounded-lg border border-slate-800 flex flex-col">
+          <div class="flex items-center justify-between mb-1.5 text-xs font-mono text-slate-400">
+            <span class="flex items-center gap-1 text-slate-300">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-amber-400"></i> COLOR PARADE & VECTORS
+            </span>
+            <span id="skin-tone-indicator" class="text-[10px] text-amber-400">Skin Axis: In-Gamut</span>
+          </div>
+          <canvas id="rgb-parade-canvas" class="w-full h-24 bg-black/90 rounded border border-slate-800"></canvas>
+          <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+            <span class="text-red-400 font-bold">R-Trace</span>
+            <span class="text-green-400 font-bold">G-Trace</span>
+            <span class="text-blue-400 font-bold">B-Trace</span>
+            <span class="text-amber-400">Skin: ~10:30 line</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detected Telemetry & Manual Override Sliders -->
+      <div class="bg-cyber-800 rounded-xl border border-slate-800 p-4">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-3 flex items-center justify-between">
+          <span>Scene Condition Telemetry & Artistic Overrides</span>
+          <span class="text-[10px] text-slate-500 lowercase">auto-sampled • drag to tweak intent</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+          <!-- Subject Movement / Motion Speed Slider -->
+          <div class="bg-cyber-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="flex justify-between items-center mb-1 text-slate-300">
+              <span class="flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> Subject Speed / Motion:</span>
+              <span id="val-motion-label" class="font-bold text-amber-400">Normal / Walking</span>
+            </div>
+            <input type="range" id="slider-motion" min="0" max="4" step="1" value="1" oninput="onMotionSliderChange()" class="w-full accent-amber-400 cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 mt-0.5">
+              <span>Static/Tripod</span>
+              <span>Walking</span>
+              <span>Running</span>
+              <span>Fast Sports</span>
+              <span>Supersonic</span>
+            </div>
+          </div>
+
+          <!-- Ambient Light / Lux Level Slider -->
+          <div class="bg-cyber-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="flex justify-between items-center mb-1 text-slate-300">
+              <span class="flex items-center gap-1"><i data-lucide="sun" class="w-3.5 h-3.5 text-cyan-400"></i> Ambient Light Level:</span>
+              <span id="val-light-label" class="font-bold text-cyan-400">Golden Hour (~4,000 lx)</span>
+            </div>
+            <input type="range" id="slider-light" min="0" max="4" step="1" value="2" oninput="onLightSliderChange()" class="w-full accent-cyan-400 cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 mt-0.5">
+              <span>Night / Candlelite</span>
+              <span>Dim Indoors</span>
+              <span>Golden / Shade</span>
+              <span>Bright Daylight</span>
+              <span>Blazing Sun</span>
+            </div>
+          </div>
+
+          <!-- Subject Distance Estimate Slider -->
+          <div class="bg-cyber-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="flex justify-between items-center mb-1 text-slate-300">
+              <span class="flex items-center gap-1"><i data-lucide="ruler" class="w-3.5 h-3.5 text-emerald-400"></i> Estimated Subject Distance:</span>
+              <span id="val-dist-label" class="font-bold text-emerald-400">2.0 m (~6.5 ft)</span>
+            </div>
+            <input type="range" id="slider-distance" min="0.3" max="25" step="0.2" value="2.0" oninput="onDistanceSliderChange()" class="w-full accent-emerald-400 cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 mt-0.5">
+              <span>Macro (0.3m)</span>
+              <span>Headshot (1.5m)</span>
+              <span>Full Body (4m)</span>
+              <span>Landscape (&infin;)</span>
+            </div>
+          </div>
+
+          <!-- Depth of Field Intent Slider -->
+          <div class="bg-cyber-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="flex justify-between items-center mb-1 text-slate-300">
+              <span class="flex items-center gap-1"><i data-lucide="disc" class="w-3.5 h-3.5 text-purple-400"></i> Bokeh / Depth Target:</span>
+              <span id="val-dof-label" class="font-bold text-purple-400">Shallow (Creamy Bokeh)</span>
+            </div>
+            <input type="range" id="slider-dof" min="0" max="2" step="1" value="0" oninput="onDofSliderChange()" class="w-full accent-purple-400 cursor-pointer">
+            <div class="flex justify-between text-[9px] text-slate-500 mt-0.5">
+              <span>Ultra Shallow</span>
+              <span>Balanced</span>
+              <span>Deep Edge-to-Edge</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: Camera Recommendations, Pro Dial Cards & Video Engine (Col 5) -->
+    <section class="lg:col-span-5 flex flex-col gap-4">
+
+      <!-- Gear Status & Sensor Card -->
+      <div class="bg-gradient-to-br from-cyber-800 to-cyber-700 rounded-xl border border-slate-700/80 p-4 shadow-xl">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-700 text-xs">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield" class="w-4 h-4 text-cyan-400"></i>
+            <span class="font-mono font-bold text-slate-200" id="gear-name-display">Sony ZV-E10 II Profile</span>
+          </div>
+          <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800" id="gear-crop-badge">Crop: 1.5x APS-C</span>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-2 mt-3 text-center text-xs font-mono">
+          <div class="bg-cyber-900/90 p-2 rounded border
